@@ -4,7 +4,7 @@ import random
 import telebot
 from telebot import types
 
-import bot_tools.qr_code_recognition
+import qr_code_recognition
 from questions import text_question_data_1, text_question_data_2, qr_question_data_1, qr_question_data_2, \
     statistic_question_data_1, choose_question_data_1, choose_question_data_2, choose_question_data_3, \
     choose_question_data_4, choose_question_data_5, statistic_question_data_2, choose_question_data_6, \
@@ -60,8 +60,9 @@ def cleaner(message):
     current_quiz_number[message.from_user.id] = 0
     total_points[message.from_user.id] = 0
     all_answers[message.from_user.id] = None
-    user_answers.clear()
+    user_answers[message.from_user.id] = None
     chosen_answers[message.from_user.id] = None
+    chosen_answers_stat[message.from_user.id] = None
 
 
 @bot.message_handler(
@@ -72,7 +73,7 @@ def func(message):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("Главное меню")
         markup.add(btn1)
-        bot.send_message(message.chat.id, text="Бла-бла-бла", reply_markup=markup)
+        bot.send_message(message.chat.id, text="Виртуальный библиотечный квиз, проходящий в центральной библиотеке НИУ ВШЭ. Хочешь узнать, какие услуги есть в библиотеке, как ими пользоваться и куда лучше пойти? Тогда начинай!", reply_markup=markup)
     elif message.text == "Главное меню":
         cleaner(message)
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -127,18 +128,21 @@ def text_question(message, data):
 
 
 def text_answer(message):
-    if message.text in current_quiz[message.from_user.id]["right_answers"] or len(
-            current_quiz[message.from_user.id]["right_answers"]) == 0:
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton("Следующий вопрос")
-        markup.add(btn1)
-        bot.send_message(message.chat.id, text=str(current_quiz[message.from_user.id]["right_answer_reply"]).format(
-            message.from_user), reply_markup=markup)
+    if message.text == "/start":
+        start(message)
     else:
-        msg = bot.send_message(message.chat.id,
-                               text=str(current_quiz[message.from_user.id]["wrong_answer_reply"]).format(
-                                   message.from_user))
-        bot.register_next_step_handler(msg, text_answer)
+        if message.text.upper() in current_quiz[message.from_user.id]["right_answers"] or len(
+                current_quiz[message.from_user.id]["right_answers"]) == 0:
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            btn1 = types.KeyboardButton("Следующий вопрос")
+            markup.add(btn1)
+            bot.send_message(message.chat.id, text=str(current_quiz[message.from_user.id]["right_answer_reply"]).format(
+                message.from_user), reply_markup=markup)
+        else:
+            msg = bot.send_message(message.chat.id,
+                                   text=str(current_quiz[message.from_user.id]["wrong_answer_reply"]).format(
+                                       message.from_user))
+            bot.register_next_step_handler(msg, text_answer)
 
 
 def qr_question(message, data):
@@ -149,18 +153,21 @@ def qr_question(message, data):
 
 
 def qr_answer(message):
-    if bot_tools.qr_code_recognition.photo(bot, message) == current_quiz[message.from_user.id]["qr_text"]:
-        total_points[message.from_user.id] += int(current_quiz[message.from_user.id]["points"])
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton("Следующий вопрос")
-        markup.add(btn1)
-        bot.send_message(message.chat.id, text=str(current_quiz[message.from_user.id]["right_answer_reply"]).format(
-            message.from_user), reply_markup=markup)
+    if message.text == "/start":
+        start(message)
     else:
-        msg = bot.send_message(message.chat.id,
-                               text=str(current_quiz[message.from_user.id]["wrong_answer_reply"]).format(
-                                   message.from_user))
-        bot.register_next_step_handler(msg, qr_answer)
+        if qr_code_recognition.photo(bot, message) == current_quiz[message.from_user.id]["qr_text"]:
+            total_points[message.from_user.id] += int(current_quiz[message.from_user.id]["points"])
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            btn1 = types.KeyboardButton("Следующий вопрос")
+            markup.add(btn1)
+            bot.send_message(message.chat.id, text=str(current_quiz[message.from_user.id]["right_answer_reply"]).format(
+                message.from_user), reply_markup=markup)
+        else:
+            msg = bot.send_message(message.chat.id,
+                                   text=str(current_quiz[message.from_user.id]["wrong_answer_reply"]).format(
+                                       message.from_user))
+            bot.register_next_step_handler(msg, qr_answer)
 
 
 def statistic_question(message):
@@ -178,21 +185,24 @@ def statistic_question(message):
 
 
 def statistic_answer(message):
-    chosen_answers_stat[message.from_user.id] = []
-    if user_data[message.from_user.id]["poll"] in user_answers.keys():
-        for i in user_answers[user_data[message.from_user.id]["poll"]]:
-            chosen_answers_stat[message.from_user.id].append(all_answers[message.from_user.id][int(i)])
-        total_points[message.from_user.id] += int(current_quiz[message.from_user.id]["points"])
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton("Следующий вопрос")
-        markup.add(btn1)
-        bot.send_message(message.chat.id, text=str(current_quiz[message.from_user.id]["answer_reply"]).format(
-            message.from_user), reply_markup=markup)
+    if message.text == "/start":
+        start(message)
     else:
-        bot.send_message(message.chat.id,
-                         text='Опрос не пройден',
-                         reply_markup=types.ReplyKeyboardRemove())
-        statistic_question(message)
+        chosen_answers_stat[message.from_user.id] = []
+        if user_data[message.from_user.id]["poll"] in user_answers.keys():
+            for i in user_answers[user_data[message.from_user.id]["poll"]]:
+                chosen_answers_stat[message.from_user.id].append(all_answers[message.from_user.id][int(i)])
+            total_points[message.from_user.id] += int(current_quiz[message.from_user.id]["points"])
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            btn1 = types.KeyboardButton("Следующий вопрос")
+            markup.add(btn1)
+            bot.send_message(message.chat.id, text=str(current_quiz[message.from_user.id]["answer_reply"]).format(
+                message.from_user), reply_markup=markup)
+        else:
+            bot.send_message(message.chat.id,
+                             text='Опрос не пройден',
+                             reply_markup=types.ReplyKeyboardRemove())
+            statistic_question(message)
 
 
 @bot.poll_answer_handler()
@@ -218,29 +228,32 @@ def choose_question(message):
 
 
 def choose_answer(message):
-    chosen_answers[message.from_user.id] = []
-    if user_data[message.from_user.id]["poll"] in user_answers.keys():
-        for i in user_answers[user_data[message.from_user.id]["poll"]]:
-            chosen_answers[message.from_user.id].append(all_answers[message.from_user.id][int(i)])
-        if sorted(chosen_answers[message.from_user.id]) == sorted(current_quiz[message.from_user.id]["right_answers"]):
-            total_points[message.from_user.id] += int(current_quiz[message.from_user.id]["points"])
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            btn1 = types.KeyboardButton("Следующий вопрос")
-            markup.add(btn1)
-            bot.send_message(message.chat.id, text=str(current_quiz[message.from_user.id]["right_answer_reply"]).format(
-                message.from_user), reply_markup=markup)
+    if message.text == "/start":
+        start(message)
+    else:
+        chosen_answers[message.from_user.id] = []
+        if user_data[message.from_user.id]["poll"] in user_answers.keys():
+            for i in user_answers[user_data[message.from_user.id]["poll"]]:
+                chosen_answers[message.from_user.id].append(all_answers[message.from_user.id][int(i)])
+            if sorted(chosen_answers[message.from_user.id]) == sorted(current_quiz[message.from_user.id]["right_answers"]):
+                total_points[message.from_user.id] += int(current_quiz[message.from_user.id]["points"])
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                btn1 = types.KeyboardButton("Следующий вопрос")
+                markup.add(btn1)
+                bot.send_message(message.chat.id, text=str(current_quiz[message.from_user.id]["right_answer_reply"]).format(
+                    message.from_user), reply_markup=markup)
+            else:
+                bot.send_message(message.chat.id,
+                                 text=str(current_quiz[message.from_user.id]["wrong_answer_reply"]).format(
+                                     message.from_user),
+                                 reply_markup=types.ReplyKeyboardRemove())
+                choose_question(message)
         else:
             bot.send_message(message.chat.id,
                              text=str(current_quiz[message.from_user.id]["wrong_answer_reply"]).format(
                                  message.from_user),
                              reply_markup=types.ReplyKeyboardRemove())
             choose_question(message)
-    else:
-        bot.send_message(message.chat.id,
-                         text=str(current_quiz[message.from_user.id]["wrong_answer_reply"]).format(
-                             message.from_user),
-                         reply_markup=types.ReplyKeyboardRemove())
-        choose_question(message)
 
 
 bot.polling(none_stop=True)

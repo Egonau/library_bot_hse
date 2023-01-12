@@ -7,7 +7,7 @@ text_question_data_1 = {
                 "прочитай её название и ответь на вопрос: кого не стоит списывать со счетов?",
     "right_answer_reply": "Отлично!",
     "wrong_answer_reply": "Попробуй еще раз!",
-    "right_answers": ["Бросивших учебу разносчиков прессы"],
+    "right_answers": ["БРОСИВШИХ УЧЕБУ РАЗНОСЧИКОВ ПРЕССЫ", "БРОСИВШИХ УЧЁБУ РАЗНОСЧИКОВ ПРЕССЫ"],
     "points": 30
 }
 qr_question_data_1 = {
@@ -17,7 +17,7 @@ qr_question_data_1 = {
                 "этот чат!",
     "right_answer_reply": "Отлично! Правильный ответ.",
     "wrong_answer_reply": "Попробуй еще раз!",
-    "qr_text": "71795929",
+    "qr_text": "https://t.me/library_hse_pokrovka_bot",
     "points": 30
 }
 choose_question_data_1 = {
@@ -57,7 +57,8 @@ choose_question_data_3 = {
     "right_answer_reply": "Продолжим! Ведь это был правильный ответ!",
     "wrong_answer_reply": "Попробуй еще раз!",
     "right_answers": ["На Малой Пионерской, Мясницкой, на Старой Басманной (A) и (B), Таллинской и на Шаболовке"],
-    "wrong_answers": ["На Малой Пионерской, Мясницкой и на Старой Басманной (A)", "На Малой Пионерской, Мясницкой и на Старой Басманной (A) и (B)"],
+    "wrong_answers": ["На Малой Пионерской, Мясницкой и на Старой Басманной (A)",
+                      "На Малой Пионерской, Мясницкой и на Старой Басманной (A) и (B)"],
     "points": 40
 }
 qr_question_data_2 = {
@@ -68,20 +69,19 @@ qr_question_data_2 = {
                 "этот чат!",
     "right_answer_reply": "Отлично! Правильный ответ! Помнишь бумажную книгу, которую надо было найти в начале игры? "
                           "Давай посмотрим, что у нас есть еще "
-                "по теме известных вселенных!",
-    "wrong_answer_reply": "Попробуй еще раз1",
-    "qr_text": "75188275",
+                          "по теме известных вселенных!",
+    "wrong_answer_reply": "Попробуй еще раз!",
+    "qr_text": "https://t.me/library_hse_pokrovka_bot/",
     "points": 10
 }
 choose_question_data_4 = {
     "quiz_type": "choose",
     "question": " Зайди во вкладку Publication Founder с главной страницы сайта "
-                "Библиотеки и набери в строке поиска название The Lord of Rings and Philosophy: One Book to Rule Them "
-                "All. Название базы данных - это самая последняя строчка! В какой базе данных доступна эта книга?",
+                "Библиотеки и набери в строке поиска название Frodo’s Journey: Discover the Hidden Meaning of the Lord of the Rings. Название базы данных - это самая последняя строчка! В какой базе данных доступна эта книга?",
     "right_answer_reply": "Отлично, ответ найден!",
     "wrong_answer_reply": "Попробуй еще раз!",
-    "right_answers": ["ProQuest"],
-    "wrong_answers": ["EBSCO eBooks", "Elsevier Books"],
+    "right_answers": ["EBSCO eBooks"],
+    "wrong_answers": ["ProQuest", "Elsevier Books"],
     "points": 40
 }
 choose_question_data_5 = {
@@ -117,7 +117,7 @@ choose_question_data_6 = {
                 "варианте, а библиотекаря рядом нет? Подсказка: только ОДИН ответ ниже НЕПРАВИЛЬНЫЙ.",
     "right_answer_reply": "Варианты всегда есть, главное, не отчаиваться! А это был очередной правильный ответ!",
     "wrong_answer_reply": "Попробуй еще раз!",
-    "right_answers": ["Позвонить на горячую линию","Задать вопрос на сайте","Написать нам в социальных сетях"],
+    "right_answers": ["Позвонить на горячую линию", "Задать вопрос на сайте", "Написать нам в социальных сетях"],
     "wrong_answers": ["Отчаяться?..."],
     "points": 20
 }
@@ -128,7 +128,7 @@ choose_question_data_7 = {
     "right_answer_reply": "И ты почти у цели! Правильных ответов все больше!",
     "wrong_answer_reply": "Попробуй еще раз!",
     "right_answers": ["На шумном втором этаже (работает 24/7)"],
-    "wrong_answers": ["Где угодно!","На третьем этаже"],
+    "wrong_answers": ["Где угодно!", "На третьем этаже"],
     "points": 10
 }
 text_question_data_3 = {
@@ -137,6 +137,6 @@ text_question_data_3 = {
                 "ним можно взять ЛЮБУЮ книгу! ПЕРВТИ ТО НРЫОВО",
     "right_answer_reply": "Абонемент твой!",
     "wrong_answer_reply": "Попробуй еще раз!",
-    "right_answers": ["Привет от вороны"],
+    "right_answers": ["ПРИВЕТ ОТ ВОРОНЫ"],
     "points": 30
 }
